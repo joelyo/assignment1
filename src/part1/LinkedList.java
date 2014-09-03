@@ -95,6 +95,10 @@ public class LinkedList<E> implements PositionList<E> {
 			head.setPrev(n);
 		}
 		head = n;
+		// error: tail was still null when adding new node to a empty list
+		if (tail == null) {
+			tail = n;
+		}
 		size++;
 	}
 
@@ -105,6 +109,10 @@ public class LinkedList<E> implements PositionList<E> {
 			tail.setNext(n);
 		}
 		tail = n;
+		// error: head was still null when adding new node to a empty list
+		if (head == null) {
+			head = n;
+		}
 		size++;
 	}
 
@@ -115,6 +123,9 @@ public class LinkedList<E> implements PositionList<E> {
 		Node<E> n = new Node<E>(b, a, e);
 		if (a == null) {
 			tail = n;
+		} else {
+			// error: node being added wasn't connected to the existing next node
+			a.setPrev(n);
 		}
 		b.setNext(n);
 		size++;
@@ -130,6 +141,8 @@ public class LinkedList<E> implements PositionList<E> {
 		} else {
 			head = n;
 		}
+		// error: node being added wasn't connected to the next node
+		a.setPrev(n);
 		size++;
 	}
 

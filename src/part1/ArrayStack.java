@@ -51,6 +51,10 @@ public class ArrayStack<E> implements IStack<E> {
 
 	@Override
 	public E top() {
+		// error: did not return null when stack was empty
+		if (isEmpty()) {
+			return null;
+		}
 		return stackArray[top];
 	}
 
@@ -59,7 +63,8 @@ public class ArrayStack<E> implements IStack<E> {
 		if (size() == stackArray.length) {
 			// double the capacity of the array
 			E tmpArray[] = (E[]) new Object[stackArray.length * 2];
-			for (int i = 0; i < top; i++) {
+			// error: array wasn't replicated properly since for loop missed an element
+			for (int i = 0; i <= top; i++) {
 				tmpArray[i] = stackArray[i];
 			}
 			stackArray = tmpArray;
