@@ -1,6 +1,7 @@
 package part2;
 
 import adt.*;
+
 import java.util.*;
 
 public class ExpenditureTrees {
@@ -29,7 +30,43 @@ public class ExpenditureTrees {
 	 * This method should not modify its parameters in any way.
 	 */
 	public static List<String> summary(Tree<String> tree, List<String> types) {
-		return null; // REMOVE THIS LINE AND WRITE THIS METHOD
+		List<String>summary = summaryList(tree, types, tree.root());
+		return summary;
+	}
+	
+	private static List<String> summaryList(Tree<String> tree, List<String> types, Position<String> node) {
+		List<String>summary = new ArrayList<String>();
+		if (types.contains(node.getElement())) {
+			summary.add(node.getElement());
+		}
+		if (tree.isInternal(node)) {
+			for (int i = 0; i < tree.numChildren(node); i++) {
+				List<String>temp = summaryList(tree, types, tree.children(node).get(i));
+				System.out.println(temp);
+				for (int n = 0; n < temp.size(); n++) {
+					summary.add(temp.get(n));
+				}
+			}
+			if (summary.contains(node.getElement())) {
+				for (int i = 0; i < tree.numChildren(node); i++) {
+					summary.remove(tree.children(node).get(i).getElement());
+				}
+			}
+			boolean allChildren = true;
+			for (int i = 0; i < tree.numChildren(node); i++) {
+				if (!summary.contains(tree.children(node).get(i).getElement())) {
+					allChildren = false;
+				}
+			}
+			if (allChildren) {
+				for (int i = 0; i < tree.numChildren(node); i++) {
+					summary.remove(tree.children(node).get(i).getElement());
+				}
+				summary.add(node.getElement());
+			}
+			
+		}
+		return summary;
 	}
 
 	/**
