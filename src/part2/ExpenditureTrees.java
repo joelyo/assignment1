@@ -36,20 +36,11 @@ public class ExpenditureTrees {
 	
 	private static List<String> summaryList(Tree<String> tree, List<String> types, Position<String> node) {
 		List<String>summary = new ArrayList<String>();
-		if (types.contains(node.getElement())) {
-			summary.add(node.getElement());
-		}
 		if (tree.isInternal(node)) {
 			for (int i = 0; i < tree.numChildren(node); i++) {
 				List<String>temp = summaryList(tree, types, tree.children(node).get(i));
-				System.out.println(temp);
 				for (int n = 0; n < temp.size(); n++) {
 					summary.add(temp.get(n));
-				}
-			}
-			if (summary.contains(node.getElement())) {
-				for (int i = 0; i < tree.numChildren(node); i++) {
-					summary.remove(tree.children(node).get(i).getElement());
 				}
 			}
 			boolean allChildren = true;
@@ -58,13 +49,17 @@ public class ExpenditureTrees {
 					allChildren = false;
 				}
 			}
-			if (allChildren) {
+			if (allChildren || types.contains(node.getElement())) {
 				for (int i = 0; i < tree.numChildren(node); i++) {
 					summary.remove(tree.children(node).get(i).getElement());
 				}
 				summary.add(node.getElement());
 			}
 			
+		} else {
+			if (types.contains(node.getElement())) {
+				summary.add(node.getElement());
+			}
 		}
 		return summary;
 	}
@@ -92,7 +87,46 @@ public class ExpenditureTrees {
 	 */
 	public static boolean contains(Tree<String> tree, List<String> types,
 			String expenseType) {
-		return false; // REMOVE THIS LINE AND WRITE THIS METHOD
+		Boolean contains = false;
+		List<String> typesList = typesList(tree, types, tree.root());
+		if (typesList.contains(expenseType) || types.contains(tree.root().getElement())) {
+			contains = true;
+		}
+		return contains;
+	}
+	
+	private static List<String> typesList(Tree<String> tree, List<String> types, Position<String> node) {
+		List<String> typesList = new ArrayList<String>();
+		List<String> temp = new ArrayList<String>();
+		if (tree.isInternal(node)) {
+			for (int i = 0; i < tree.numChildren(node); i++) {
+				if (types.contains(tree.children(node).get(i).getElement())) {
+					temp = inTypes(tree, types, tree.children(node).get(i));
+				} else {
+					temp = typesList(tree, types, tree.children(node).get(i));
+				}
+				for (int n = 0; n < temp.size(); n++) {
+					typesList.add(temp.get(n));
+				}
+			}
+		}
+		return typesList;
+	}
+	
+	private static List<String> inTypes(Tree<String> tree, List<String> types, Position<String> node) {
+		List<String> inTypes = new ArrayList<String>();
+		if (tree.isInternal(node)) {
+			for (int i = 0; i < tree.numChildren(node); i++) {
+				List<String>temp = inTypes(tree, types, tree.children(node).get(i));
+				for (int n = 0; n < temp.size(); n++) {
+					inTypes.add(temp.get(n));
+				}
+			}
+			inTypes.add(node.getElement());
+		} else {
+			inTypes.add(node.getElement());
+		}
+		return inTypes;
 	}
 
 	/**
@@ -119,7 +153,38 @@ public class ExpenditureTrees {
 	 * This method should not modify its parameters in any way.
 	 */
 	public static List<String> negation(Tree<String> tree, List<String> types) {
-		return null; // REMOVE THIS LINE AND WRITE THIS METHOD
+		List<String>negation = negationList(tree, types, tree.root());
+		return negation;
+	}
+	
+	private static List<String> negationList(Tree<String> tree, List<String> types, Position<String> node) {
+		List<String>negation = new ArrayList<String>();
+		if (tree.isInternal(node)) {
+			for (int i = 0; i < tree.numChildren(node); i++) {
+				List<String>temp = negationList(tree, types, tree.children(node).get(i));
+				for (int n = 0; n < temp.size(); n++) {
+					negation.add(temp.get(n));
+				}
+			}
+			boolean allChildren = true;
+			for (int i = 0; i < tree.numChildren(node); i++) {
+				if (!negation.contains(tree.children(node).get(i).getElement())) {
+					allChildren = false;
+				}
+			}
+			if (allChildren) {
+				for (int i = 0; i < tree.numChildren(node); i++) {
+					negation.remove(tree.children(node).get(i).getElement());
+				}
+				negation.add(node.getElement());
+			}
+			
+		} else {
+			if (!types.contains(node.getElement()) && !types.contains(tree.parent(node).getElement())) {
+				negation.add(node.getElement());
+			}
+		}
+		return negation;
 	}
 
 }
