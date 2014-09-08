@@ -44,6 +44,8 @@ public class ExpenditureTrees {
 		// list of the summary of the given types
 		List<String> summary = new ArrayList<String>();
 		if (tree.isInternal(node)) {
+			// boolean to see if all the node's children's types are in the list
+			boolean allChildren = true;
 			// add the types found from the node's children to the list
 			for (int i = 0; i < tree.numChildren(node); i++) {
 				List<String> temp = summaryList(tree, types, tree
@@ -51,10 +53,7 @@ public class ExpenditureTrees {
 				for (int n = 0; n < temp.size(); n++) {
 					summary.add(temp.get(n));
 				}
-			}
-			// check if all children's types are in the list
-			boolean allChildren = true;
-			for (int i = 0; i < tree.numChildren(node); i++) {
+				// check if child's type is in the list
 				if (!summary.contains(tree.children(node).get(i).getElement())) {
 					allChildren = false;
 				}
@@ -123,10 +122,10 @@ public class ExpenditureTrees {
 			List<String> types, Position<String> node) {
 		// list of the closure of the given types
 		List<String> typesList = new ArrayList<String>();
-		List<String> temp = new ArrayList<String>();
 		if (tree.isInternal(node)) {
 			// add the types found from the node's children to the list
 			for (int i = 0; i < tree.numChildren(node); i++) {
+				List<String> temp = new ArrayList<String>();
 				// check if the child's type is part of the given types
 				if (types.contains(tree.children(node).get(i).getElement())) {
 					temp = allTypes(tree, tree.children(node).get(i));
@@ -145,7 +144,8 @@ public class ExpenditureTrees {
 	 * This method takes a tree and a node and returns a list of all the nodes
 	 * in the closure of the given node.
 	 */
-	private static List<String> allTypes(Tree<String> tree, Position<String> node) {
+	private static List<String> allTypes(Tree<String> tree,
+			Position<String> node) {
 		// list of the closure of the given node's type
 		List<String> allTypes = new ArrayList<String>();
 		if (tree.isInternal(node)) {
@@ -208,6 +208,8 @@ public class ExpenditureTrees {
 		// list of the negation of the given types
 		List<String> negation = new ArrayList<String>();
 		if (tree.isInternal(node)) {
+			// boolean to see if all the node's children's types are in the list
+			boolean allChildren = true;
 			// add the types found from the node's children (whose type is not
 			// in the given types) to the list
 			for (int i = 0; i < tree.numChildren(node); i++) {
@@ -218,10 +220,7 @@ public class ExpenditureTrees {
 						negation.add(temp.get(n));
 					}
 				}
-			}
-			// check if all children's types are in the list
-			boolean allChildren = true;
-			for (int i = 0; i < tree.numChildren(node); i++) {
+				// check if child's type is in the list
 				if (!negation.contains(tree.children(node).get(i).getElement())) {
 					allChildren = false;
 				}
