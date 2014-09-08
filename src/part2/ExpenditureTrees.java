@@ -101,12 +101,15 @@ public class ExpenditureTrees {
 	public static boolean contains(Tree<String> tree, List<String> types,
 			String expenseType) {
 		Boolean contains = false;
-		// list of the closure of the given types
-		List<String> typesList = typesList(tree, types, tree.root());
-		// check if given expense type is in the list or if the given types
-		// include the root's type
-		if (typesList.contains(expenseType)
-				|| types.contains(tree.root().getElement())) {
+		// checks if the given types exclude the root's type
+		if (!types.contains(tree.root().getElement())) {
+			// list of the closure of the given types
+			List<String> typesList = typesList(tree, types, tree.root());
+			// check if given expense type is in the list
+			if (typesList.contains(expenseType)) {
+				contains = true;
+			}
+		} else {
 			contains = true;
 		}
 		return contains;
